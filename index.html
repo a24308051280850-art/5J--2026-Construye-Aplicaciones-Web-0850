@@ -1,23 +1,336 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<title>Page Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Patrio - Septiembre</title>
+    <style>
+        /* RESETEO COMPLETO PARA PANTALLA COMPLETA */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden; /* Elimina barras de desplazamiento */
+            background-color: #000;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* CONTENEDOR PRINCIPAL QUE APOSTARÁ AL 100% DEL ANCHO */
+        .flag-container {
+            width: 100%;
+            flex: 1; /* Ocupa todo el espacio vertical disponible arriba del footer */
+            position: relative;
+        }
+
+        /* LAS VISTAS OCUPAN TODO EL ESPACIO */
+        .view-section {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .view-section.active {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* CADA FRANJA DE LA BANDERA TOMA EXACTAMENTE 1/3 DEL ANCHO */
+        .stripe {
+            flex: 1;
+            height: 100%;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .green {
+            background-color: #00b25c;
+        }
+
+        .white {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .red {
+            background-color: #ff2b2b;
+        }
+
+        /* BOTONES DE NAVEGACIÓN Y TÍTULOS */
+        .nav-btn, .section-title-box {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-btn:hover {
+            background-color: #333333;
+        }
+
+        /* ESCUDO EN LA PÁGINA DE INICIO */
+        .shield-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
+
+        .shield-img {
+            max-width: 280px;
+            max-height: 40vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* CAJAS DE TEXTO NEGRAS */
+        .content-box {
+            background-color: rgba(20, 20, 20, 0.92);
+            color: #ffffff;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 380px;
+        }
+
+        .content-box h3 {
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .content-box .date {
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+        }
+
+        .content-box p {
+            font-size: 0.82rem;
+            line-height: 1.3;
+            color: #e0e0e0;
+        }
+
+        /* TARJETAS CON IMAGEN (PERSONAJES) */
+        .personaje-item {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            width: 95%;
+        }
+
+        .personaje-img {
+            width: 110px;
+            height: 135px;
+            object-fit: cover;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+            flex-shrink: 0;
+            background-color: #333;
+        }
+
+        /* BOTÓN PARA REGRESAR AL INICIO */
+        .home-btn {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 100;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 6px 14px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+
+        /* FOOTER PEGADO ABAJO */
+        footer {
+            height: 38px;
+            width: 100%;
+            background-color: #111111;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #222;
+            flex-shrink: 0;
+        }
+    </style>
 </head>
 <body>
-<h1>mi presentacion!!</h1>
-<h2> Nombre completo: </h2>
-<p>  Hernandez Cuellar Emiliano</p>
-<h2> Edad: </h2>
-<p>  17 años </p>
-<h2> Escuela: </h2>
-<p>  Cbtis 128 </p>
-<h2> Semestre: </h2>
-<p>  5to </p>
-<h2> Grupo: </h2>
-<p>  J </p>
-<h2> Color favorito: </h2>
-<p>  Azul </p>
-<h2> Pasatiempo favorito: </h2>
-<p>  Jugar beisbol </p>
+
+    <button class="home-btn" onclick="showSection('inicio')">← Inicio</button>
+
+    <div class="flag-container">
+
+        <!-- VISTA 0: INICIO / MENÚ PRINCIPAL -->
+        <div id="inicio" class="view-section active">
+            <div class="stripe green" style="justify-content: flex-end; padding-bottom: 60px;">
+                <button class="nav-btn" onclick="showSection('fechas')">FECHAS IMPORTANTES</button>
+            </div>
+            <div class="stripe white">
+                <div class="shield-container">
+                    <img src="escudo_nacional.png" alt="Escudo Nacional de México" class="shield-img" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/2a/Coat_of_arms_of_Mexico.svg'">
+                </div>
+                <button class="nav-btn" onclick="showSection('personajes')" style="margin-bottom: 40px;">PERSONAJES ILUSTRES</button>
+            </div>
+            <div class="stripe red" style="justify-content: flex-end; padding-bottom: 60px;">
+                <button class="nav-btn" onclick="showSection('curiosidades')">DATOS CURIOSOS Y MITOS</button>
+            </div>
+        </div>
+
+        <!-- VISTA 1: FECHAS IMPORTANTES -->
+        <div id="fechas" class="view-section">
+            <div class="stripe green">
+                <div class="content-box">
+                    <h3>Defensa del Castillo de Chapultepec</h3>
+                    <div class="date">13 de septiembre de 1847</div>
+                    <p>Se conmemora la gesta heroica de los Niños Héroes y la defensa del Colegio Militar frente a la invasión estadounidense.</p>
+                </div>
+                <div class="content-box">
+                    <h3>Consumación de la Independencia</h3>
+                    <div class="date">27 de septiembre de 1821</div>
+                    <p>El Ejército Trigarante, encabezado por Agustín de Iturbide y Vicente Guerrero, entra triunfal a la Ciudad de México tras 11 años de lucha.</p>
+                </div>
+            </div>
+
+            <div class="stripe white">
+                <div class="section-title-box">FECHAS IMPORTANTES</div>
+                <div class="content-box">
+                    <h3>El Grito de Dolores</h3>
+                    <div class="date">15 de septiembre (noche)</div>
+                    <p>El cura Miguel Hidalgo y Costilla convoca al pueblo a levantarse en armas contra el dominio español en Dolores, Guanajuato.</p>
+                </div>
+                <div class="content-box">
+                    <h3>Firma del Acta de Independencia</h3>
+                    <div class="date">28 de septiembre de 1821</div>
+                    <p>Se firma el documento formal que declara formalmente el nacimiento del Imperio Mexicano como nación soberana.</p>
+                </div>
+            </div>
+
+            <div class="stripe red">
+                <div class="content-box">
+                    <h3>Inicio de la Guerra de Independencia</h3>
+                    <div class="date">16 de septiembre de 1810</div>
+                    <p>Comienza formalmente el movimiento insurgente. Se celebra con el tradicional Desfile Militar en la Ciudad de México y en todo el país.</p>
+                </div>
+                <div class="content-box">
+                    <h3>Nacimiento de José María Morelos</h3>
+                    <div class="date">30 de septiembre de 1765</div>
+                    <p>Nace el "Siervo de la Nación", estratega militar y político clave que redactó los Sentimientos de la Nación.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA 2: PERSONAJES ILUSTRES -->
+        <div id="personajes" class="view-section">
+            <div class="stripe green">
+                <div class="personaje-item">
+                    <div class="content-box">
+                        <p><strong>Miguel Hidalgo y Costilla:</strong> Conocido como el Padre de la Patria. Intelectual insurgente que abolió la esclavitud en los territorios bajo su mando.</p>
+                    </div>
+                    <img src="miguel_hidalgo.jfif" alt="Miguel Hidalgo" class="personaje-img">
+                </div>
+                <div class="personaje-item">
+                    <div class="content-box">
+                        <p><strong>Josefa Ortiz de Domínguez:</strong> La Corregidora de Querétaro. Pieza clave de la conspiración de Querétaro; al ser descubierta, logró alertar a tiempo a Hidalgo y Allende.</p>
+                    </div>
+                    <img src="josefa_ortiz.jfif" alt="Josefa Ortiz de Domínguez" class="personaje-img">
+                </div>
+            </div>
+
+            <div class="stripe white">
+                <div class="section-title-box">PERSONAJES ILUSTRES</div>
+                <div class="content-box">
+                    <p><strong>José María Morelos y Pavón:</strong> Lideró la segunda etapa insurgente. Organizó el Congreso de Anáhuac y sentó las bases constitucionales del país.</p>
+                </div>
+                <img src="morelos.jfif" alt="José María Morelos" class="personaje-img" style="width: 120px; height: 140px;">
+            </div>
+
+            <div class="stripe red">
+                <div class="personaje-item">
+                    <img src="vicente_guerrero.jfif" alt="Vicente Guerrero" class="personaje-img">
+                    <div class="content-box">
+                        <p><strong>Vicente Guerrero:</strong> Líder insurgente que mantuvo viva la resistencia mediante la guerra de guerrillas y pactó la paz para lograr la consumación.</p>
+                    </div>
+                </div>
+                <div class="personaje-item">
+                    <img src="agustin_iturbide.jfif" alt="Agustín de Iturbide" class="personaje-img">
+                    <div class="content-box">
+                        <p><strong>Agustín de Iturbide:</strong> Militar realista que ideó el Plan de Iguala y unió fuerzas con los insurgentes para formar el Ejército Trigarante.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA 3: DATOS CURIOSOS Y MITOS -->
+        <div id="curiosidades" class="view-section">
+            <div class="stripe green">
+                <div class="content-box">
+                    <p><strong>El Mito de Juan Escutia y la Bandera:</strong> La historia de que el cadete se envolvió en la bandera nacional para tirarse al vacío desde el Castillo de Chapultepec responde más a una narrativa de construcción nacionalista del siglo XIX que a un hecho documentado de forma rigurosa.</p>
+                </div>
+                <div class="content-box">
+                    <p><strong>¿Por qué se da el Grito el 15 y no el 16?:</strong> La tradición de iniciar el festejo la noche del 15 de septiembre se popularizó durante el Porfiriato. Aunque coincide con el cumpleaños de Porfirio Díaz (15 de septiembre), el festejo nocturno ya se realizaba desde décadas antes para esperar el amanecer del día 16.</p>
+                </div>
+            </div>
+
+            <div class="stripe white">
+                <div class="section-title-box">DATOS CURIOSOS Y MITOS</div>
+                <div class="content-box">
+                    <p><strong>El origen de los Chiles en Nogada:</strong> La leyenda cuenta que las monjas agustinas del convento de Santa Mónica, en Puebla, crearon este platillo para celebrar la entrada de Agustín de Iturbide, utilizando ingredientes que representaran los colores del Ejército Trigarante (verde, blanco y rojo)..</p>
+                </div>
+            </div>
+
+            <div class="stripe red">
+                <div class="content-box">
+                    <p><strong>La Bandera Trigarante:</strong> La bandera utilizada en la consumación de 1821 no tenía el orden actual de colores; sus franjas eran diagonales y llevaban los colores blanco (religión), verde (independencia) y rojo (unión)..</p>
+                </div>
+                <div class="content-box">
+                    <p><strong>La campana viajera:</strong> La campana que Miguel Hidalgo hizo sonar la madrugada del 16 de septiembre de 1810 no se quedó en Dolores, Guanajuato. En 1896, Porfirio Díaz ordenó trasladarla al Palacio Nacional en la Ciudad de México. Desde entonces, permanece en el balcón principal y es la misma que el Presidente en turno hace repicar cada 15 de septiembre durante la ceremonia del Grito.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        EMILIANO HERNANDEZ CUELLAR 5-J 24308051280850
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.view-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
 </body>
 </html>
